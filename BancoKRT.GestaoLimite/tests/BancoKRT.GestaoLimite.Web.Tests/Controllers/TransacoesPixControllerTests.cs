@@ -12,7 +12,7 @@ public class TransacoesPixControllerTests
     private const string Cpf = "52998224725";
 
     private static LimiteDto Conta(string ag = "0001", string conta = "111")
-        => new(Guid.NewGuid(), Cpf, ag, conta, 1000m, 5000m);
+        => new(Guid.NewGuid(), Cpf, ag, conta, 1000m, 5000m, LimiteDisponivel: 600m);
 
     private static TransacoesPixController Criar(
         Func<HttpRequestMessage, HttpResponseMessage>? limites = null,
@@ -83,7 +83,7 @@ public class TransacoesPixControllerTests
         var view = Assert.IsType<ViewResult>(r);
         var model = Assert.IsType<TransacaoPixViewModel>(view.Model);
         Assert.Equal(Cpf, model.Documento);
-        Assert.Equal(1000m, model.LimiteConta);
+        Assert.Equal(600m, model.LimiteConta);
         Assert.Equal(5000m, model.SaldoConta);
     }
 }
