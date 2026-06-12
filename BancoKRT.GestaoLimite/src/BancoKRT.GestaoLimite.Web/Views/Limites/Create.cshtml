@@ -1,0 +1,52 @@
+@model BancoKRT.GestaoLimite.Web.Models.CriarLimiteViewModel
+@{
+    ViewData["Title"] = "Cadastrar limite";
+}
+
+<h2 class="mb-3">Cadastrar Conta</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="All" class="text-danger mb-2"></div>
+
+            <div class="mb-3">
+                <label asp-for="Documento" class="form-label"></label>
+                <input asp-for="Documento" class="form-control" placeholder="CPF ou CNPJ (com ou sem máscara)" />
+                <span asp-validation-for="Documento" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="NumeroAgencia" class="form-label"></label>
+                <input asp-for="NumeroAgencia" class="form-control" placeholder="Ex.: 0001" />
+                <span asp-validation-for="NumeroAgencia" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="NumeroConta" class="form-label"></label>
+                <input asp-for="NumeroConta" class="form-control" placeholder="Ex.: 123456-7" />
+                <span asp-validation-for="NumeroConta" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="LimitePix" class="form-label"></label>
+                <input asp-for="LimitePix" class="form-control money" type="text" inputmode="decimal" placeholder="0,00" />
+                <span asp-validation-for="LimitePix" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Saldo" class="form-label"></label>
+                <input asp-for="Saldo" class="form-control money" type="text" inputmode="decimal" placeholder="0,00" />
+                <span asp-validation-for="Saldo" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-success">Cadastrar</button>
+            <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script src="~/js/br-decimal.js" asp-append-version="true"></script>
+}

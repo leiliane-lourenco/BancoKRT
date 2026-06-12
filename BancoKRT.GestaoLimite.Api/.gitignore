@@ -1,0 +1,15 @@
+## .NET
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+
+## Visual Studio
+.vs/
+*.suo
+
+## Banco SQLite local (dados de teste)
+*.db
+*.db-shm
+*.db-wal

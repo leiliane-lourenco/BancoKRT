@@ -1,0 +1,155 @@
+@model IReadOnlyList<BancoKRT.GestaoLimite.Web.ApiClients.Models.LimiteDto>
+
+@{
+    ViewData["Title"] = "Buscar Conta";
+    var documento = ViewBag.Documento as string;
+}
+
+<div class="container mt-4">  
+
+
+    @if (ViewBag.Aviso is string aviso)
+    {
+        <div class="alert alert-warning rounded-4">
+            @aviso
+        </div>
+    }
+
+    <!-- RESULTADOS -->
+    @if (Model.Count > 0)
+    {
+        <!-- DOCUMENTO (exibido uma única vez, independente da quantidade de contas) -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <div class="text-secondary small mb-1">Documento</div>
+                <div class="fs-4 fw-semibold">@Model[0].Documento</div>
+            </div>
+            <a class="btn btn-success"
+               asp-action="Create"
+               asp-route-documento="@Model[0].Documento">
+                + Novo cadastro
+            </a>
+        </div>
+
+        <div class="d-flex flex-column gap-4">
+
+            @foreach (var item in Model)
+            {
+                <div class="card border-0 shadow-sm rounded-4">
+
+                    <div class="card-body p-4">
+
+                        <!-- CAMPOS ABAIXO -->
+                        <div class="row g-3">
+
+                            <!-- AGÊNCIA -->
+                            <div class="col-md-3">
+                                <div class="border rounded-4 p-3 bg-light h-100">
+
+                                    <div class="text-secondary small mb-1">
+                                        Agência
+                                    </div>
+
+                                    <div class="fs-5 fw-semibold">
+                                        @item.NumeroAgencia
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- CONTA -->
+                            <div class="col-md-3">
+                                <div class="border rounded-4 p-3 bg-light h-100">
+
+                                    <div class="text-secondary small mb-1">
+                                        Conta
+                                    </div>
+
+                                    <div class="fs-5 fw-semibold">
+                                        @item.NumeroConta
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- SALDO -->
+                            <div class="col-md-3">
+                                <div class="border rounded-4 p-3 bg-light h-100">
+
+                                    <div class="text-secondary small mb-1">
+                                        Saldo em conta
+                                    </div>
+
+                                    <div class="fs-5 fw-bold text-primary">
+                                        R$ @item.Saldo.ToString("N2")
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- LIMITE DIÁRIO -->
+                            <div class="col-md-3">
+                                <div class="border rounded-4 p-3 bg-light h-100">
+
+                                    <div class="text-secondary small mb-1">
+                                        Limite de PIX disponível hoje
+                                    </div>
+
+                                    <div class="fs-5 fw-bold text-success">
+                                        R$ @item.LimiteDisponivel.ToString("N2")
+                                    </div>
+
+                                    <div class="text-secondary small">
+                                        de R$ @item.LimitePix.ToString("N2")
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- AÇÕES -->
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+
+                            <a class="btn btn-dark px-4"
+                               asp-controller="TransacoesPix"
+                               asp-action="Transferir"
+                               asp-route-documento="@item.Documento"
+                               asp-route-numeroAgencia="@item.NumeroAgencia"
+                               asp-route-numeroConta="@item.NumeroConta">
+                                Transferir
+                            </a>
+
+                            <a class="btn btn-outline-primary px-4"
+                               asp-action="Edit"
+                               asp-route-documento="@item.Documento"
+                               asp-route-numeroAgencia="@item.NumeroAgencia"
+                               asp-route-numeroConta="@item.NumeroConta">
+                                Alterar
+                            </a>
+
+                            <a class="btn btn-outline-danger px-4"
+                               asp-action="Delete"
+                               asp-route-documento="@item.Documento"
+                               asp-route-numeroAgencia="@item.NumeroAgencia"
+                               asp-route-numeroConta="@item.NumeroConta">
+                                Remover
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+    else if (!string.IsNullOrWhiteSpace(documento) && ViewBag.Aviso is null)
+    {
+        <div class="text-center text-muted mt-5">
+            Nenhum resultado encontrado.
+        </div>
+    }
+
+</div>

@@ -1,0 +1,26 @@
+@model BancoKRT.GestaoLimite.Web.ApiClients.Models.LimiteDto
+@{
+    ViewData["Title"] = "Remover limite";
+}
+
+<h2 class="mb-3 text-danger">Remover registro de limite</h2>
+<p>Tem certeza de que deseja remover este registro?</p>
+
+<dl class="row">
+    <dt class="col-sm-3">Documento (CPF/CNPJ)</dt>
+    <dd class="col-sm-9">@Model.Documento</dd>
+    <dt class="col-sm-3">Agência</dt>
+    <dd class="col-sm-9">@Model.NumeroAgencia</dd>
+    <dt class="col-sm-3">Conta</dt>
+    <dd class="col-sm-9">@Model.NumeroConta</dd>
+    <dt class="col-sm-3">Limite PIX</dt>
+    <dd class="col-sm-9">R$ @Model.LimitePix.ToString("N2")</dd>
+</dl>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" name="documento" value="@Model.Documento" />
+    <input type="hidden" name="numeroAgencia" value="@Model.NumeroAgencia" />
+    <input type="hidden" name="numeroConta" value="@Model.NumeroConta" />
+    <button type="submit" class="btn btn-danger">Remover</button>
+    <a class="btn btn-secondary" asp-action="Index" asp-route-documento="@Model.Documento">Cancelar</a>
+</form>

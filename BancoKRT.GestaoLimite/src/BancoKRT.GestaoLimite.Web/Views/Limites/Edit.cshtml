@@ -1,0 +1,41 @@
+@model BancoKRT.GestaoLimite.Web.Models.EditarLimiteViewModel
+@{
+    ViewData["Title"] = "Alterar limite";
+}
+
+<h2 class="mb-3">Alterar limite PIX</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="All" class="text-danger mb-2"></div>
+
+            <input type="hidden" asp-for="Documento" />
+            <input type="hidden" asp-for="NumeroAgencia" />
+            <input type="hidden" asp-for="NumeroConta" />
+
+            <dl class="row">
+                <dt class="col-sm-4">CPF/CNPJ</dt>
+                <dd class="col-sm-8">@Model.Documento</dd>
+                <dt class="col-sm-4">Agência</dt>
+                <dd class="col-sm-8">@Model.NumeroAgencia</dd>
+                <dt class="col-sm-4">Conta</dt>
+                <dd class="col-sm-8">@Model.NumeroConta</dd>
+            </dl>
+
+            <div class="mb-3">
+                <label asp-for="LimitePix" class="form-label"></label>
+                <input asp-for="LimitePix" class="form-control money" type="text" inputmode="decimal" placeholder="0,00" />
+                <span asp-validation-for="LimitePix" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a class="btn btn-secondary" asp-action="Index" asp-route-documento="@Model.Documento">Voltar</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script src="~/js/br-decimal.js" asp-append-version="true"></script>
+}

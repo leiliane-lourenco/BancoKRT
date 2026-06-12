@@ -1,0 +1,54 @@
+### Banco KRT — Gestão de Limite PIX — coleção de requests (REST Client / VS Code)
+### Suba a API antes: dotnet run --project src/BancoKRT.GestaoLimite.Web
+@host = http://localhost:5080
+
+### 2.1 - Cadastrar limite
+POST {{host}}/api/v1/limites
+Content-Type: application/json
+
+{
+  "documento": "52998224725",
+  "numeroAgencia": "0001",
+  "numeroConta": "100",
+  "limitePix": 1000.00,
+  "saldo": 5000.00
+}
+
+### 2.1 - Cadastrar (duplicado) -> 409 Conflict
+POST {{host}}/api/v1/limites
+Content-Type: application/json
+
+{ "documento": "52998224725", "numeroAgencia": "0001", "numeroConta": "100", "limitePix": 500, "saldo": 5000 }
+
+### 2.2 - Buscar conta específica
+GET {{host}}/api/v1/limites/52998224725/0001/100
+
+### 2.2 - Buscar todas as contas de um CPF
+GET {{host}}/api/v1/limites/52998224725
+
+### 2.3 - Alterar limite
+PUT {{host}}/api/v1/limites/52998224725/0001/100
+Content-Type: application/json
+
+{ "limitePix": 2000.00 }
+
+### 2.5 - Transação PIX dentro do limite -> APROVADA (debita)
+POST {{host}}/api/v1/transacoes-pix
+Content-Type: application/json
+
+{ "documento": "52998224725", "numeroAgencia": "0001", "numeroConta": "100", "valor": 300.00 }
+
+### 2.5 - Transação PIX acima do limite -> NEGADA (não consome)
+POST {{host}}/api/v1/transacoes-pix
+Content-Type: application/json
+
+{ "documento": "52998224725", "numeroAgencia": "0001", "numeroConta": "100", "valor": 999999.00 }
+
+### 2.5 - Transação PIX em conta inexistente -> 404
+POST {{host}}/api/v1/transacoes-pix
+Content-Type: application/json
+
+{ "documento": "52998224725", "numeroAgencia": "9999", "numeroConta": "9999", "valor": 10 }
+
+### 2.4 - Remover registro -> 204
+DELETE {{host}}/api/v1/limites/52998224725/0001/100

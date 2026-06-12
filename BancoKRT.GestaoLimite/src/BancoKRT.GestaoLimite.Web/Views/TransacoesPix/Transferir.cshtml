@@ -1,0 +1,66 @@
+@model BancoKRT.GestaoLimite.Web.Models.TransacaoPixViewModel
+@{
+    ViewData["Title"] = "Transferir PIX";
+}
+
+<h2 class="mb-3">PIX</h2>
+
+@if (Model.Processado)
+{
+    var classe = Model.Aprovada ? "alert-success" : "alert-danger";
+    <div class="alert @classe">
+        <h4 class="alert-heading">@Model.Status</h4>
+        <hr />
+        <p class="mb-1">Saldo em conta: <strong>R$ @( (Model.Saldo ?? 0).ToString("N2") )</strong></p>
+        <p class="mb-0">Limite de PIX disponível hoje: <strong>R$ @( (Model.LimiteDisponivel ?? 0).ToString("N2") )</strong></p>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <dl class="row mb-4">
+            <dt class="col-sm-5">Documento (CPF/CNPJ)</dt>
+            <dd class="col-sm-7">@Model.Documento</dd>
+
+            <dt class="col-sm-5">Número da agência</dt>
+            <dd class="col-sm-7">@Model.NumeroAgencia</dd>
+
+            <dt class="col-sm-5">Número da conta</dt>
+            <dd class="col-sm-7">@Model.NumeroConta</dd>
+
+            <dt class="col-sm-5">Saldo em conta (R$)</dt>
+            <dd class="col-sm-7">@( (Model.SaldoConta ?? 0).ToString("N2") )</dd>
+
+            <dt class="col-sm-5">Limite diário de PIX (R$)</dt>
+            <dd class="col-sm-7">@( (Model.LimiteConta ?? 0).ToString("N2") )</dd>
+        </dl>
+
+        <form asp-action="Transferir" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+            <input type="hidden" asp-for="Documento" />
+            <input type="hidden" asp-for="NumeroAgencia" />
+            <input type="hidden" asp-for="NumeroConta" />
+            <input type="hidden" asp-for="LimiteConta" />
+            <input type="hidden" asp-for="SaldoConta" />
+
+            <div class="mb-3">
+                <label asp-for="Valor" class="form-label"></label>
+                <input asp-for="Valor"
+                       class="form-control money"
+                       type="text"
+                       inputmode="decimal"
+                       placeholder="0,00" />
+                <span asp-validation-for="Valor" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-dark">Transferir</button>
+            <a class="btn btn-secondary" asp-action="Simular">Nova pesquisa</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script src="~/js/br-decimal.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,57 @@
+# Orquestra os 3 serviços: DynamoDB Local + API + MVC.#
+# Pré-requisito: o repositório do MVC (BancoKRT.GestaoLimite) deve estar na pasta
+# IRMÃ desta (../BancoKRT.GestaoLimite), pois é o contexto de build do serviço "mvc".
+#
+# Subir:    docker compose up --build
+# Acessar:  MVC  -> http://localhost:5247
+#           API/Swagger -> http://localhost:5180
+#           DynamoDB Local -> http://localhost:8000
+
+services:
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    container_name: gestaolimite-dynamodb
+    # roda como root + dbPath em volume = dados persistem entre reinícios
+    user: root
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data"
+    volumes:
+      - dynamodb-data:/home/dynamodblocal/data
+    ports:
+      - "8000:8000"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gestaolimite-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      # aponta para o DynamoDB Local pela rede do compose
+      - DynamoDb__ServiceUrl=http://dynamodb-local:8000
+      - DynamoDb__Region=us-east-1
+      - DynamoDb__TableName=ContasLimite
+      - DynamoDb__AccessKey=local
+      - DynamoDb__SecretKey=local
+    depends_on:
+      - dynamodb-local
+    ports:
+      - "5180:8080"
+
+  mvc:
+    build:
+      context: ../BancoKRT.GestaoLimite
+      dockerfile: Dockerfile
+    container_name: gestaolimite-mvc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      # o MVC chama a API pelo nome do serviço na rede do compose
+      - ApiSettings__BaseUrl=http://api:8080
+    depends_on:
+      - api
+    ports:
+      - "5247:8080"
+
+volumes:
+  dynamodb-data:

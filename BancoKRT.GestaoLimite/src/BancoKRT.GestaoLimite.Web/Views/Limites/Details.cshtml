@@ -1,0 +1,22 @@
+@model BancoKRT.GestaoLimite.Web.ApiClients.Models.LimiteDto
+@{
+    ViewData["Title"] = "Detalhes do limite";
+}
+
+<h2 class="mb-3">Detalhes do limite</h2>
+
+<dl class="row">
+    <dt class="col-sm-3">Documento (CPF/CNPJ)</dt>
+    <dd class="col-sm-9">@Model.Documento</dd>
+    <dt class="col-sm-3">Agência</dt>
+    <dd class="col-sm-9">@Model.NumeroAgencia</dd>
+    <dt class="col-sm-3">Conta</dt>
+    <dd class="col-sm-9">@Model.NumeroConta</dd>
+    <dt class="col-sm-3">Saldo em conta</dt>
+    <dd class="col-sm-9">R$ @Model.Saldo.ToString("N2")</dd>
+    <dt class="col-sm-3">Limite de PIX disponível hoje</dt>
+    <dd class="col-sm-9">R$ @Model.LimiteDisponivel.ToString("N2") <span class="text-muted">de R$ @Model.LimitePix.ToString("N2")</span></dd>
+</dl>
+
+<a class="btn btn-outline-primary" asp-action="Edit" asp-route-documento="@Model.Documento" asp-route-numeroAgencia="@Model.NumeroAgencia" asp-route-numeroConta="@Model.NumeroConta">Alterar</a>
+<a class="btn btn-secondary" asp-action="Index" asp-route-documento="@Model.Documento">Voltar</a>
