@@ -54,7 +54,7 @@ public class TransacoesPixController : Controller
             Documento = conta.Documento,
             NumeroAgencia = conta.NumeroAgencia,
             NumeroConta = conta.NumeroConta,
-            LimiteConta = conta.LimitePix,
+            LimiteConta = conta.LimiteDisponivel,
             SaldoConta = conta.Saldo
         };
 
